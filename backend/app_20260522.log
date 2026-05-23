@@ -1,0 +1,490 @@
+
+
+                 Sanic
+         Build Fast. Run Fast.
+
+
+Sanic v24.6.0
+Goin' Fast @ http://0.0.0.0:8000
+app: ContestApp
+mode: debug, single worker
+server: sanic, HTTP/1.1
+python: 3.12.6
+platform: Windows-11-10.0.26200-SP0
+auto-reload: enabled
+packages: sanic-routing==23.12.0
+Creating multiprocessing context using 'spawn'
+Starting a process: Sanic-Server-0-0
+Starting a process: Sanic-Reloader-0
+(pymysql.err.OperationalError) (1049, "Unknown database 'contest_db'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\base.py", line 3304, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\default.py", line 617, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\dialects\mysql\aiomysql.py", line 267, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 131, in await_only
+    return current.driver.switch(awaitable)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 75, in _connect
+    await conn._connect()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 540, in _connect
+    await self._request_authentication()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 844, in _request_authentication
+    auth_packet = await self._read_packet()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 652, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymysql\err.py", line 154, in raise_mysql_exception
+    raise errorclass(errno, errval, sqlstate=sqlstate)
+pymysql.err.OperationalError: (1049, "Unknown database 'contest_db'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\worker\serve.py", line 121, in worker_serve
+    return _serve_http_1(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\runners.py", line 260, in _serve_http_1
+    loop.run_until_complete(app._server_event("init", "before"))
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py", line 2452, in _server_event
+    await self.dispatch(
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\signals.py", line 303, in dispatch
+    return await dispatch
+           ^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\signals.py", line 263, in _dispatch
+    raise e
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\signals.py", line 247, in _dispatch
+    retval = await maybe_coroutine
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py", line 1629, in _listener
+    await maybe_coro
+  File "C:\Users\zhangzheng\my-contest-app\backend\app.py", line 28, in setup_db
+    await init_db()
+  File "C:\Users\zhangzheng\my-contest-app\backend\database.py", line 37, in init_db
+    async with engine.begin() as conn:
+               ^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 210, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\ext\asyncio\engine.py", line 1063, in begin
+    async with conn:
+               ^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\ext\asyncio\base.py", line 121, in __aenter__
+    return await self.start(is_ctxmanager=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\ext\asyncio\engine.py", line 273, in start
+    await greenlet_spawn(self.sync_engine.connect)
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\base.py", line 3280, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\base.py", line 148, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\base.py", line 2444, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\base.py", line 3304, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\impl.py", line 179, in _do_get
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\create.py", line 643, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\engine\default.py", line 617, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\dialects\mysql\aiomysql.py", line 267, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 131, in await_only
+    return current.driver.switch(awaitable)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 75, in _connect
+    await conn._connect()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 540, in _connect
+    await self._request_authentication()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 844, in _request_authentication
+    auth_packet = await self._read_packet()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiomysql\connection.py", line 652, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\pymysql\err.py", line 154, in raise_mysql_exception
+    raise errorclass(errno, errval, sqlstate=sqlstate)
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1049, "Unknown database 'contest_db'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Not all workers acknowledged a successful startup. Shutting down.
+
+One of your worker processes terminated before startup was completed. Please solve any errors experienced during startup. If you do not see an exception traceback in your error logs, try running Sanic in a single process using --single-process or single_process=True. Once you are confident that the server is able to start without errors you can switch back to multiprocess mode.
+Killing Sanic-Server-0-0 [5904]
+Killing Sanic-Reloader-0 [40588]
+Server Stopped
+Worker shutdown timed out. Some processes may still be running.
+Take care
+
+
+                 Sanic
+         Build Fast. Run Fast.
+
+
+Sanic v24.6.0
+Goin' Fast @ http://0.0.0.0:8000
+app: ContestApp
+mode: debug, single worker
+server: sanic, HTTP/1.1
+python: 3.12.6
+platform: Windows-11-10.0.26200-SP0
+auto-reload: enabled
+packages: sanic-routing==23.12.0
+Creating multiprocessing context using 'spawn'
+Starting a process: Sanic-Server-0-0
+Starting a process: Sanic-Reloader-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [19860]
+<Server sockets=(<asyncio.TransportSocket fd=364, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [19860]
+Unexpected error: logging_middleware() missing 1 required positional argument: 'handler'
+
+Unexpected error: logging_middleware() missing 1 required positional argument: 'handler'
+
+Restarting a process: Sanic-Server-0-0 [19860]
+Begin restart termination: Sanic-Server-0-0 [19860]
+Starting a process: Sanic-Server-0-0
+Restarting a process: Sanic-Server-0-0 [42212]
+Starting a process: Sanic-Server-0-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [26256]
+<Server sockets=(<asyncio.TransportSocket fd=1012, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [26256]
+Restarting a process: Sanic-Server-0-0 [26256]
+Begin restart termination: Sanic-Server-0-0 [26256]
+Starting a process: Sanic-Server-0-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [24200]
+<Server sockets=(<asyncio.TransportSocket fd=776, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [24200]
+Restarting a process: Sanic-Server-0-0 [24200]
+Begin restart termination: Sanic-Server-0-0 [24200]
+Starting a process: Sanic-Server-0-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [10548]
+<Server sockets=(<asyncio.TransportSocket fd=920, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [10548]
+
+
+                 Sanic
+         Build Fast. Run Fast.
+
+
+Sanic v24.6.0
+Goin' Fast @ http://0.0.0.0:8000
+app: ContestApp
+mode: debug, single worker
+server: sanic, HTTP/1.1
+python: 3.12.6
+platform: Windows-11-10.0.26200-SP0
+auto-reload: enabled
+packages: sanic-routing==23.12.0
+Creating multiprocessing context using 'spawn'
+Starting a process: Sanic-Server-0-0
+Starting a process: Sanic-Reloader-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [39316]
+<Server sockets=(<asyncio.TransportSocket fd=912, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [39316]
+Unexpected error: AsyncAdapt_aiomysql_connection.ping() missing 1 required positional argument: 'reconnect'
+[2026-05-22 15:23:13] POST /api/auth/login - 127.0.0.1 - STATUS 500 - 4ms
+
+Restarting a process: Sanic-Server-0-0 [39316]
+Begin restart termination: Sanic-Server-0-0 [39316]
+Starting a process: Sanic-Server-0-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [41928]
+<Server sockets=(<asyncio.TransportSocket fd=984, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [41928]
+
+
+                 Sanic
+         Build Fast. Run Fast.
+
+
+Sanic v24.6.0
+Goin' Fast @ http://0.0.0.0:8000
+app: ContestApp
+mode: debug, single worker
+server: sanic, HTTP/1.1
+python: 3.12.6
+platform: Windows-11-10.0.26200-SP0
+auto-reload: enabled
+packages: sanic-routing==23.12.0
+Creating multiprocessing context using 'spawn'
+Starting a process: Sanic-Server-0-0
+Starting a process: Sanic-Reloader-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [6928]
+<Server sockets=(<asyncio.TransportSocket fd=876, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [6928]
+BEGIN (implicit)
+SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s
+[generated in 0.00660s] ('admin',)
+Unexpected error: (pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')
+[SQL: SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s]
+[parameters: ('admin',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+[2026-05-22 15:35:47] POST /api/auth/login - 127.0.0.1 - STATUS 500 - 16ms
+
+BEGIN (implicit)
+SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s
+[cached since 592.6s ago] ('admin',)
+[2026-05-22 15:45:40] POST /api/auth/login - 127.0.0.1 - STATUS 200 - 340ms
+
+Executing <Task pending name='Task-13' coro=<HttpProtocol.connection_task() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:161> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:301> took 0.313 seconds
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.created_at 
+FROM employees
+[generated in 0.00074s] ()
+Unexpected error: (pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')
+[SQL: SELECT employees.id, employees.name, employees.age, employees.email, employees.created_at 
+FROM employees]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+[2026-05-22 15:48:13] GET /api/employees/ - 127.0.0.1 - STATUS 500 - 17ms
+
+
+
+                 Sanic
+         Build Fast. Run Fast.
+
+
+Sanic v24.6.0
+Goin' Fast @ http://0.0.0.0:8000
+app: ContestApp
+mode: debug, single worker
+server: sanic, HTTP/1.1
+python: 3.12.6
+platform: Windows-11-10.0.26200-SP0
+auto-reload: enabled
+packages: sanic-routing==23.12.0
+Creating multiprocessing context using 'spawn'
+Starting a process: Sanic-Server-0-0
+Starting a process: Sanic-Reloader-0
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+Process ack: Sanic-Server-0-0 [37300]
+<Server sockets=(<asyncio.TransportSocket fd=896, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [37300]
+Unexpected error: AsyncAdapt_aiomysql_connection.ping() missing 1 required positional argument: 'reconnect'
+[2026-05-22 15:53:45] POST /api/auth/login - 127.0.0.1 - STATUS 500 - 4ms
+
