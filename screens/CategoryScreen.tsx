@@ -31,7 +31,11 @@ export default function CategoryScreen() {
     try {
       setLoading(true);
       const response = await apiClient.getCategories();
-      setCategories(response.data || []);
+      if (response.code === 200) {
+        setCategories(response.data || []);
+      } else {
+        Alert.alert('Error', response.message || 'Failed to load categories');
+      }
     } catch (error) {
       console.error('Failed to fetch categories:', error);
       Alert.alert('Error', 'Failed to load categories');
@@ -57,9 +61,9 @@ export default function CategoryScreen() {
       resetForm();
       fetchCategories();
       Alert.alert('Success', `Category ${editingCategory ? 'updated' : 'created'} successfully`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save category:', error);
-      Alert.alert('Error', 'Failed to save category');
+      Alert.alert('Error', error?.message || 'Failed to save category');
     }
   };
 

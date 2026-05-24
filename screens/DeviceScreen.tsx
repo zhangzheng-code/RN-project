@@ -42,7 +42,11 @@ export default function DeviceScreen() {
     try {
       setLoading(true);
       const response = await apiClient.getDevices();
-      setDevices(response.data || []);
+      if (response.code === 200) {
+        setDevices(response.data || []);
+      } else {
+        Alert.alert('Error', response.message || 'Failed to load devices');
+      }
     } catch (error) {
       console.error('Failed to fetch devices:', error);
       Alert.alert('Error', 'Failed to load devices');
@@ -92,9 +96,9 @@ export default function DeviceScreen() {
       resetForm();
       fetchDevices();
       Alert.alert('Success', `Device ${editingDevice ? 'updated' : 'created'} successfully`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save device:', error);
-      Alert.alert('Error', 'Failed to save device');
+      Alert.alert('Error', error?.message || 'Failed to save device');
     }
   };
 
