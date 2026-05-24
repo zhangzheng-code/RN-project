@@ -20,7 +20,11 @@ async def get_employees(request: Request):
                 "id": emp.id,
                 "name": emp.name,
                 "age": emp.age,
-                "email": emp.email
+                "email": emp.email,
+                "phone": emp.phone,
+                "department": emp.department,
+                "position": emp.position,
+                "employee_id": emp.employee_id,
             }
             for emp in employees
         ]
@@ -35,6 +39,10 @@ async def create_employee(request: Request):
     name = request.json['name']
     age = request.json['age']
     email = request.json['email']
+    phone = request.json.get('phone', '')
+    department = request.json.get('department', '')
+    position = request.json.get('position', '')
+    employee_id_str = request.json.get('employee_id', '')
 
     # Validation
     if not (1 <= len(name) <= 20):
@@ -58,7 +66,11 @@ async def create_employee(request: Request):
         new_employee = Employee(
             name=name,
             age=age,
-            email=email
+            email=email,
+            phone=phone or None,
+            department=department or None,
+            position=position or None,
+            employee_id=employee_id_str or None,
         )
 
         session.add(new_employee)
@@ -69,7 +81,11 @@ async def create_employee(request: Request):
             "id": new_employee.id,
             "name": new_employee.name,
             "age": new_employee.age,
-            "email": new_employee.email
+            "email": new_employee.email,
+            "phone": new_employee.phone,
+            "department": new_employee.department,
+            "position": new_employee.position,
+            "employee_id": new_employee.employee_id,
         })
 
 @employees_bp.put('/<employee_id:int>')
@@ -80,6 +96,10 @@ async def update_employee(request: Request, employee_id: int):
     name = request.json['name']
     age = request.json['age']
     email = request.json['email']
+    phone = request.json.get('phone', '')
+    department = request.json.get('department', '')
+    position = request.json.get('position', '')
+    employee_id_str = request.json.get('employee_id', '')
 
     # Validation
     if not (1 <= len(name) <= 20):
@@ -112,6 +132,10 @@ async def update_employee(request: Request, employee_id: int):
         employee.name = name
         employee.age = age
         employee.email = email
+        employee.phone = phone or None
+        employee.department = department or None
+        employee.position = position or None
+        employee.employee_id = employee_id_str or None
 
         await session.commit()
 
@@ -119,7 +143,11 @@ async def update_employee(request: Request, employee_id: int):
             "id": employee.id,
             "name": employee.name,
             "age": employee.age,
-            "email": employee.email
+            "email": employee.email,
+            "phone": employee.phone,
+            "department": employee.department,
+            "position": employee.position,
+            "employee_id": employee.employee_id,
         })
 
 @employees_bp.delete('/<employee_id:int>')
