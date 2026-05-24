@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthUser, LoginCredentials, ApiResponse } from "./types";
-import { login } from "./mockApi";
+import { apiClient } from './apiClient';
 import { Alert } from "react-native";
 
 interface AuthContextType {
@@ -60,12 +60,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     credentials: LoginCredentials,
   ): Promise<ApiResponse<AuthUser>> => {
     try {
-      const response = await login(credentials);
+      const response = await apiClient.login(credentials);
 
       if (response.code === 200 && response.data) {
-        await AsyncStorage.setItem("authToken", response.data.token);
-        await AsyncStorage.setItem("username", response.data.username);
-        setUser(response.data);
+        const authData: AuthUser = {
+          token: (response.data as any).token,
+          username: (response.data as any).username,
+        };
+        await AsyncStorage.setItem("authToken", authData.token);
+        await AsyncStorage.setItem("username", authData.username);
+        setUser(authData);
       }
 
       return response;
