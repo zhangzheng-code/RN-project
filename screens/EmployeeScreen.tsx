@@ -22,6 +22,7 @@ export default function EmployeeScreen() {
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [formData, setFormData] = useState({
     name: '',
+    age: '',
     email: '',
     phone: '',
     department: '',
@@ -39,7 +40,11 @@ export default function EmployeeScreen() {
     try {
       setLoading(true);
       const response = await apiClient.getEmployees();
-      setEmployees(response.data || []);
+      if (response.code === 200) {
+        setEmployees(response.data || []);
+      } else {
+        Alert.alert('Error', response.message || 'Failed to load employees');
+      }
     } catch (error) {
       console.error('Failed to fetch employees:', error);
       Alert.alert('Error', 'Failed to load employees');
@@ -50,24 +55,35 @@ export default function EmployeeScreen() {
 
   const handleSave = async () => {
     try {
-      if (!formData.name || !formData.email) {
-        Alert.alert('Error', 'Name and email are required');
+      if (!formData.name || !formData.email || !formData.age) {
+        Alert.alert('Error', 'Name, age and email are required');
         return;
       }
 
+      const ageNumber = parseInt(formData.age);
+      if (isNaN(ageNumber) || ageNumber < 18 || ageNumber > 60) {
+        Alert.alert('Error', 'Age must be between 18 and 60');
+        return;
+      }
+
+      const payload = {
+        ...formData,
+        age: ageNumber,
+      };
+
       if (editingEmployee) {
-        await apiClient.updateEmployee(editingEmployee.id.toString(), formData);
+        await apiClient.updateEmployee(editingEmployee.id.toString(), payload);
       } else {
-        await apiClient.createEmployee(formData);
+        await apiClient.createEmployee(payload);
       }
 
       setModalVisible(false);
       resetForm();
       fetchEmployees();
       Alert.alert('Success', `Employee ${editingEmployee ? 'updated' : 'created'} successfully`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save employee:', error);
-      Alert.alert('Error', 'Failed to save employee');
+      Alert.alert('Error', error?.message || 'Failed to save employee');
     }
   };
 
@@ -99,6 +115,7 @@ export default function EmployeeScreen() {
     setEditingEmployee(employee);
     setFormData({
       name: employee.name,
+      age: employee.age?.toString() || '',
       email: employee.email,
       phone: employee.phone || '',
       department: employee.department || '',
@@ -111,6 +128,7 @@ export default function EmployeeScreen() {
   const resetForm = () => {
     setFormData({
       name: '',
+      age: '',
       email: '',
       phone: '',
       department: '',
@@ -193,6 +211,14 @@ export default function EmployeeScreen() {
                 onChangeText={(text) => setFormData({ ...formData, email: text })}
                 keyboardType="email-address"
                 autoCapitalize="none"
+              />
+
+              <TextInput
+                style={styles.input}
+                placeholder="Age *"
+                value={formData.age}
+                onChangeText={(text) => setFormData({ ...formData, age: text })}
+                keyboardType="numeric"
               />
 
               <TextInput
