@@ -48,12 +48,12 @@ class ApiClient {
       const data = await response.json();
 
       if (data.code === 401) {
-        // Token expired or invalid
         await AsyncStorage.removeItem('authToken');
         await AsyncStorage.removeItem('username');
-        // Force reload to login screen
-        window.location.reload();
+        console.warn('[API] 401 Unauthorized — auth data cleared');
       }
+
+      console.log(`[API] ${options.method || 'GET'} ${endpoint} → ${data.code}`, data.message);
 
       return data;
     } catch (error) {
@@ -75,7 +75,7 @@ class ApiClient {
 
   // Employee endpoints
   async getEmployees(): Promise<ApiResponse<Employee[]>> {
-    return this.request<Employee[]>('/employees/');
+    return this.request<Employee[]>('/employees');
   }
 
   async createEmployee(employee: Omit<Employee, 'id'>): Promise<ApiResponse<Employee>> {
