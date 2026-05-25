@@ -9,11 +9,26 @@ import {
   Alert,
   Modal,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { Employee } from '../types';
 import { apiClient } from '../apiClient';
 import { AuthContext } from '../AuthContext';
-import { colors, spacing, borderRadius, typography } from '../styles/designSystem';
+import { colors, spacing, borderRadius, shadows, typography } from '../styles/designSystem';
+
+const getInitials = (name: string) => {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+};
+
+const avatarColors = ['#1E3A8A', '#7C3AED', '#059669', '#D97706', '#DC2626', '#2563EB'];
+
+const getAvatarColor = (name: string) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return avatarColors[Math.abs(hash) % avatarColors.length];
+};
 
 export default function EmployeeScreen() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -66,10 +81,7 @@ export default function EmployeeScreen() {
         return;
       }
 
-      const payload = {
-        ...formData,
-        age: ageNumber,
-      };
+      const payload = { ...formData, age: ageNumber };
 
       if (editingEmployee) {
         await apiClient.updateEmployee(editingEmployee.id.toString(), payload);
@@ -88,27 +100,23 @@ export default function EmployeeScreen() {
   };
 
   const handleDelete = async (id: number) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this employee?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await apiClient.deleteEmployee(id.toString());
-              fetchEmployees();
-              Alert.alert('Success', 'Employee deleted successfully');
-            } catch (error) {
-              console.error('Failed to delete employee:', error);
-              Alert.alert('Error', 'Failed to delete employee');
-            }
-          },
+    Alert.alert('Confirm Delete', 'Are you sure you want to delete this employee?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await apiClient.deleteEmployee(id.toString());
+            fetchEmployees();
+            Alert.alert('Success', 'Employee deleted successfully');
+          } catch (error) {
+            console.error('Failed to delete employee:', error);
+            Alert.alert('Error', 'Failed to delete employee');
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleEdit = (employee: Employee) => {
@@ -126,57 +134,73 @@ export default function EmployeeScreen() {
   };
 
   const resetForm = () => {
-    setFormData({
-      name: '',
-      age: '',
-      email: '',
-      phone: '',
-      department: '',
-      position: '',
-      employee_id: '',
-    });
+    setFormData({ name: '', age: '', email: '', phone: '', department: '', position: '', employee_id: '' });
     setEditingEmployee(null);
   };
 
   const renderEmployee = ({ item }: { item: Employee }) => (
     <View style={styles.card}>
-      <View style={styles.cardHeader}>
-        <Text style={styles.employeeName}>{item.name}</Text>
+      <View style={styles.cardTop}>
+        <View style={[styles.avatar, { backgroundColor: getAvatarColor(item.name) }]}>
+          <Text style={styles.avatarText}>{getInitials(item.name)}</Text>
+        </View>
+        <View style={styles.cardInfo}>
+          <Text style={styles.employeeName}>{item.name}</Text>
+          {item.position ? (
+            <Text style={styles.employeePosition}>{item.position}</Text>
+          ) : null}
+        </View>
         <View style={styles.actionButtons}>
-          <TouchableOpacity
-            style={[styles.actionButton, styles.editButton]}
-            onPress={() => handleEdit(item)}
-          >
-            <Text style={styles.actionButtonText}>Edit</Text>
+          <TouchableOpacity style={styles.editBtn} onPress={() => handleEdit(item)}>
+            <Text style={styles.editBtnText}>Edit</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionButton, styles.deleteButton]}
-            onPress={() => handleDelete(item.id)}
-          >
-            <Text style={styles.actionButtonText}>Delete</Text>
+          <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item.id)}>
+            <Text style={styles.deleteBtnText}>Del</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={styles.employeeDetail}>Email: {item.email}</Text>
-      {item.phone && <Text style={styles.employeeDetail}>Phone: {item.phone}</Text>}
-      {item.department && <Text style={styles.employeeDetail}>Department: {item.department}</Text>}
-      {item.position && <Text style={styles.employeeDetail}>Position: {item.position}</Text>}
-      {item.employee_id && <Text style={styles.employeeDetail}>Employee ID: {item.employee_id}</Text>}
+
+      <View style={styles.divider} />
+
+      <View style={styles.detailGrid}>
+        <View style={styles.detailRow}>
+          <Text style={styles.detailLabel}>Email</Text>
+          <Text style={styles.detailValue}>{item.email}</Text>
+        </View>
+        {item.phone ? (
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Phone</Text>
+            <Text style={styles.detailValue}>{item.phone}</Text>
+          </View>
+        ) : null}
+        {item.department ? (
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Dept</Text>
+            <Text style={styles.detailValue}>{item.department}</Text>
+          </View>
+        ) : null}
+        {item.employee_id ? (
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>ID</Text>
+            <Text style={styles.detailValue}>{item.employee_id}</Text>
+          </View>
+        ) : null}
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Employees</Text>
+        <View>
+          <Text style={styles.title}>Employees</Text>
+          <Text style={styles.subtitle}>{employees.length} members</Text>
+        </View>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => {
-            resetForm();
-            setModalVisible(true);
-          }}
+          onPress={() => { resetForm(); setModalVisible(true); }}
         >
-          <Text style={styles.addButtonText}>Add Employee</Text>
+          <Text style={styles.addButtonText}>+ Add</Text>
         </TouchableOpacity>
       </View>
 
@@ -187,84 +211,44 @@ export default function EmployeeScreen() {
         refreshing={loading}
         onRefresh={fetchEmployees}
         contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
       />
 
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.modalTitle}>
                 {editingEmployee ? 'Edit Employee' : 'Add Employee'}
               </Text>
 
-              <TextInput
-                style={styles.input}
-                placeholder="Name *"
-                value={formData.name}
-                onChangeText={(text) => setFormData({ ...formData, name: text })}
-              />
+              <Text style={styles.inputLabel}>Name *</Text>
+              <TextInput style={styles.input} placeholder="Full name" value={formData.name} onChangeText={(t) => setFormData({ ...formData, name: t })} />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Email *"
-                value={formData.email}
-                onChangeText={(text) => setFormData({ ...formData, email: text })}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
+              <Text style={styles.inputLabel}>Email *</Text>
+              <TextInput style={styles.input} placeholder="email@example.com" value={formData.email} onChangeText={(t) => setFormData({ ...formData, email: t })} keyboardType="email-address" autoCapitalize="none" />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Age *"
-                value={formData.age}
-                onChangeText={(text) => setFormData({ ...formData, age: text })}
-                keyboardType="numeric"
-              />
+              <Text style={styles.inputLabel}>Age *</Text>
+              <TextInput style={styles.input} placeholder="18 - 60" value={formData.age} onChangeText={(t) => setFormData({ ...formData, age: t })} keyboardType="numeric" />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Phone"
-                value={formData.phone}
-                onChangeText={(text) => setFormData({ ...formData, phone: text })}
-                keyboardType="phone-pad"
-              />
+              <Text style={styles.inputLabel}>Phone</Text>
+              <TextInput style={styles.input} placeholder="Optional" value={formData.phone} onChangeText={(t) => setFormData({ ...formData, phone: t })} keyboardType="phone-pad" />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Department"
-                value={formData.department}
-                onChangeText={(text) => setFormData({ ...formData, department: text })}
-              />
+              <Text style={styles.inputLabel}>Department</Text>
+              <TextInput style={styles.input} placeholder="Optional" value={formData.department} onChangeText={(t) => setFormData({ ...formData, department: t })} />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Position"
-                value={formData.position}
-                onChangeText={(text) => setFormData({ ...formData, position: text })}
-              />
+              <Text style={styles.inputLabel}>Position</Text>
+              <TextInput style={styles.input} placeholder="Optional" value={formData.position} onChangeText={(t) => setFormData({ ...formData, position: t })} />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Employee ID"
-                value={formData.employee_id}
-                onChangeText={(text) => setFormData({ ...formData, employee_id: text })}
-              />
+              <Text style={styles.inputLabel}>Employee ID</Text>
+              <TextInput style={styles.input} placeholder="Optional" value={formData.employee_id} onChangeText={(t) => setFormData({ ...formData, employee_id: t })} />
 
               <View style={styles.modalActions}>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => {
-                    setModalVisible(false);
-                    resetForm();
-                  }}
-                >
-                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                <TouchableOpacity style={[styles.modalBtn, styles.cancelBtn]} onPress={() => { setModalVisible(false); resetForm(); }}>
+                  <Text style={styles.cancelBtnText}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.saveButton]}
-                  onPress={handleSave}
-                >
-                  <Text style={styles.saveButtonText}>Save</Text>
+                <TouchableOpacity style={[styles.modalBtn, styles.saveBtn]} onPress={handleSave}>
+                  <Text style={styles.saveBtnText}>Save</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -278,114 +262,184 @@ export default function EmployeeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#F8FAFC',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: spacing.md,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
+    backgroundColor: '#FFFFFF',
+    ...shadows.sm,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '700',
-    color: colors.textPrimary,
+    color: '#0F172A',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#64748B',
+    marginTop: 2,
   },
   addButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    backgroundColor: '#1E3A8A',
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
     borderRadius: borderRadius.md,
+    ...shadows.md,
   },
   addButtonText: {
-    color: colors.surface,
-    fontSize: 16,
-    fontWeight: '500',
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
   },
   listContainer: {
-    padding: spacing.md,
+    padding: spacing.lg,
+    paddingBottom: spacing.xxxl,
   },
   card: {
-    backgroundColor: colors.surface,
+    backgroundColor: '#FFFFFF',
     borderRadius: borderRadius.lg,
-    padding: spacing.md,
+    padding: spacing.lg,
     marginBottom: spacing.md,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#1E3A8A',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
-  cardHeader: {
+  cardTop: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacing.sm,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing.md,
+  },
+  avatarText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  cardInfo: {
+    flex: 1,
   },
   employeeName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    flex: 1,
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  employeePosition: {
+    fontSize: 13,
+    color: '#64748B',
+    marginTop: 2,
   },
   actionButtons: {
     flexDirection: 'row',
-    gap: spacing.sm,
+    gap: 8,
   },
-  actionButton: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
+  editBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
     borderRadius: borderRadius.sm,
-    minWidth: 60,
+    backgroundColor: '#EFF6FF',
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+  },
+  editBtnText: {
+    color: '#1E3A8A',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  deleteBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: borderRadius.sm,
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+  },
+  deleteBtnText: {
+    color: '#DC2626',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#F1F5F9',
+    marginVertical: spacing.md,
+  },
+  detailGrid: {
+    gap: 6,
+  },
+  detailRow: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  editButton: {
-    backgroundColor: colors.warning,
+  detailLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#94A3B8',
+    width: 52,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
-  deleteButton: {
-    backgroundColor: colors.error,
-  },
-  actionButtonText: {
-    color: colors.surface,
+  detailValue: {
     fontSize: 14,
-    fontWeight: '500',
-  },
-  employeeDetail: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    marginBottom: spacing.xs,
+    color: '#64748B',
+    flex: 1,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(15, 23, 42, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.lg,
-    padding: spacing.lg,
-    width: '90%',
-    maxHeight: '80%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: borderRadius.xl,
+    padding: spacing.xl,
+    width: '92%',
+    maxHeight: '85%',
+    ...shadows.lg,
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: colors.textPrimary,
-    marginBottom: spacing.lg,
+    color: '#0F172A',
+    marginBottom: spacing.xl,
     textAlign: 'center',
+  },
+  inputLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#64748B',
+    marginBottom: 6,
+    marginLeft: 2,
   },
   input: {
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: '#E2E8F0',
     borderRadius: borderRadius.md,
-    padding: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     fontSize: 16,
-    marginBottom: spacing.md,
-    backgroundColor: '#FFFFFF',
+    marginBottom: spacing.lg,
+    backgroundColor: '#F8FAFC',
+    color: '#0F172A',
   },
   modalActions: {
     flexDirection: 'row',
@@ -393,26 +447,29 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
     gap: spacing.md,
   },
-  modalButton: {
+  modalBtn: {
     flex: 1,
-    paddingVertical: spacing.md,
+    paddingVertical: spacing.lg,
     borderRadius: borderRadius.md,
     alignItems: 'center',
   },
-  cancelButton: {
-    backgroundColor: colors.text.secondary,
+  cancelBtn: {
+    backgroundColor: '#F1F5F9',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
-  saveButton: {
-    backgroundColor: colors.primary,
+  saveBtn: {
+    backgroundColor: '#1E3A8A',
+    ...shadows.md,
   },
-  cancelButtonText: {
-    color: colors.surface,
+  cancelBtnText: {
+    color: '#64748B',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
   },
-  saveButtonText: {
-    color: colors.surface,
+  saveBtnText: {
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
   },
 });

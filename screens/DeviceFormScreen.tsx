@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { Device, Category, ApiResponse } from '../types';
 import { createDevice, getCategories } from '../mockApi';
+import { colors, spacing, borderRadius, shadows } from '../styles/designSystem';
 
 interface DeviceFormScreenProps {
   navigation: any;
@@ -48,38 +49,20 @@ const DeviceFormScreen: React.FC<DeviceFormScreenProps> = ({ navigation }) => {
       Alert.alert('错误', '请输入设备名称');
       return false;
     }
-
     if (!selectedCategory) {
       Alert.alert('错误', '请选择设备分类');
       return false;
     }
-
     return true;
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
+    if (!validateForm()) return;
     setIsLoading(true);
     try {
-      const response = await createDevice({
-        name: name.trim(),
-        categoryId: selectedCategory!.id,
-      });
-
+      const response = await createDevice({ name: name.trim(), category_id: selectedCategory!.id } as any);
       if (response.code === 200) {
-        Alert.alert(
-          '成功',
-          '设备创建成功',
-          [
-            {
-              text: '确定',
-              onPress: () => navigation.goBack(),
-            },
-          ]
-        );
+        Alert.alert('成功', '设备创建成功', [{ text: '确定', onPress: () => navigation.goBack() }]);
       } else {
         Alert.alert('错误', response.message);
       }
@@ -96,86 +79,47 @@ const DeviceFormScreen: React.FC<DeviceFormScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView style={styles.scrollView}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.formContainer}>
           <Text style={styles.title}>添加设备</Text>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>设备名称 *</Text>
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-              placeholder="请输入设备名称"
-              editable={!isLoading}
-            />
+            <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="请输入设备名称" placeholderTextColor="#94A3B8" editable={!isLoading} />
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.label}>设备分类 *</Text>
-            <TouchableOpacity
-              style={styles.categorySelector}
-              onPress={() => setIsCategoryModalVisible(true)}
-              disabled={isLoading}
-            >
-              <Text style={[
-                styles.categorySelectorText,
-                !selectedCategory && styles.categorySelectorPlaceholder
-              ]}>
+            <TouchableOpacity style={styles.pickerBtn} onPress={() => setIsCategoryModalVisible(true)} disabled={isLoading}>
+              <Text style={[styles.pickerText, !selectedCategory && styles.pickerPlaceholder]}>
                 {selectedCategory ? selectedCategory.name : '请选择设备分类'}
               </Text>
+              <Text style={styles.pickerArrow}>▼</Text>
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
-            style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.submitButtonText}>创建设备</Text>
-            )}
+          <TouchableOpacity style={[styles.submitButton, isLoading && styles.submitButtonDisabled]} onPress={handleSubmit} disabled={isLoading}>
+            {isLoading ? <ActivityIndicator color="#fff" /> : <Text style={styles.submitButtonText}>创建设备</Text>}
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => navigation.goBack()}
-            disabled={isLoading}
-          >
+          <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()} disabled={isLoading}>
             <Text style={styles.cancelButtonText}>取消</Text>
           </TouchableOpacity>
         </View>
 
-        <Modal
-          visible={isCategoryModalVisible}
-          transparent
-          animationType="slide"
-          onRequestClose={() => setIsCategoryModalVisible(false)}
-        >
+        <Modal visible={isCategoryModalVisible} transparent animationType="slide" onRequestClose={() => setIsCategoryModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>选择分类</Text>
-              <ScrollView style={styles.categoryList}>
+              <ScrollView style={styles.categoryList} showsVerticalScrollIndicator={false}>
                 {categories.map((category) => (
-                  <TouchableOpacity
-                    key={category.id}
-                    style={styles.categoryItem}
-                    onPress={() => handleCategorySelect(category)}
-                  >
+                  <TouchableOpacity key={category.id} style={styles.categoryItem} onPress={() => handleCategorySelect(category)}>
                     <Text style={styles.categoryItemText}>{category.name}</Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
-              <TouchableOpacity
-                style={styles.modalCloseButton}
-                onPress={() => setIsCategoryModalVisible(false)}
-              >
+              <TouchableOpacity style={styles.modalCloseButton} onPress={() => setIsCategoryModalVisible(false)}>
                 <Text style={styles.modalCloseButtonText}>取消</Text>
               </TouchableOpacity>
             </View>
@@ -187,130 +131,34 @@ const DeviceFormScreen: React.FC<DeviceFormScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  scrollView: { flex: 1 },
+  formContainer: { padding: 20 },
+  title: { fontSize: 28, fontWeight: '700', color: '#0F172A', textAlign: 'center', marginBottom: 32 },
+  inputContainer: { marginBottom: 20 },
+  label: { fontSize: 13, fontWeight: '600', color: '#64748B', marginBottom: 8, marginLeft: 2 },
+  input: { borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8, paddingHorizontal: 16, paddingVertical: 14, fontSize: 16, backgroundColor: '#FFFFFF', color: '#0F172A', ...shadows.sm },
+  pickerBtn: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8, paddingHorizontal: 16, paddingVertical: 14,
+    backgroundColor: '#FFFFFF', ...shadows.sm,
   },
-  scrollView: {
-    flex: 1,
-  },
-  formContainer: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  categorySelector: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-  },
-  categorySelectorText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  categorySelectorPlaceholder: {
-    color: '#999',
-  },
-  submitButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  submitButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  cancelButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    width: '80%',
-    maxHeight: '60%',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  categoryList: {
-    maxHeight: 200,
-  },
-  categoryItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  categoryItemText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  modalCloseButton: {
-    backgroundColor: '#f0f0f0',
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginTop: 16,
-  },
-  modalCloseButtonText: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: '#333',
-    fontWeight: '600',
-  },
+  pickerText: { fontSize: 16, color: '#0F172A' },
+  pickerPlaceholder: { color: '#94A3B8' },
+  pickerArrow: { fontSize: 12, color: '#94A3B8' },
+  submitButton: { backgroundColor: '#1E3A8A', borderRadius: 8, paddingVertical: 16, alignItems: 'center', marginTop: 24, ...shadows.md },
+  submitButtonDisabled: { backgroundColor: '#CBD5E1' },
+  submitButtonText: { color: '#FFFFFF', fontSize: 18, fontWeight: '600' },
+  cancelButton: { backgroundColor: '#F1F5F9', borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8, paddingVertical: 16, alignItems: 'center', marginTop: 12 },
+  cancelButtonText: { color: '#64748B', fontSize: 16, fontWeight: '600' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(15,23,42,0.6)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, width: '85%', maxHeight: '60%', ...shadows.lg },
+  modalTitle: { fontSize: 20, fontWeight: '700', color: '#0F172A', textAlign: 'center', marginBottom: 16 },
+  categoryList: { maxHeight: 250 },
+  categoryItem: { paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#F1F5F9' },
+  categoryItemText: { fontSize: 16, color: '#0F172A' },
+  modalCloseButton: { backgroundColor: '#F1F5F9', paddingVertical: 14, borderRadius: 8, marginTop: 16, borderWidth: 1, borderColor: '#E2E8F0' },
+  modalCloseButtonText: { textAlign: 'center', fontSize: 16, color: '#64748B', fontWeight: '600' },
 });
 
 export default DeviceFormScreen;

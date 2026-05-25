@@ -1,17 +1,21 @@
 export interface Employee {
   id: number;
   name: string;
+  age: number;
   email: string;
   phone?: string;
   department?: string;
   position?: string;
   employee_id?: string;
+  created_at?: string;
 }
 
 export interface Category {
   id: number;
   name: string;
   description?: string;
+  device_count?: number;
+  created_at?: string;
 }
 
 export interface Device {
@@ -24,6 +28,7 @@ export interface Device {
   status: 'available' | 'assigned' | 'maintenance' | 'retired';
   purchase_date?: string;
   notes?: string;
+  created_at?: string;
 }
 
 export interface ApiResponse<T = any> {

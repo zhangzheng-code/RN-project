@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useAuth } from '../AuthContext';
+import { shadows } from '../styles/designSystem';
 
 const LoginScreen: React.FC = () => {
   const { loginUser } = useAuth();
@@ -23,7 +24,6 @@ const LoginScreen: React.FC = () => {
       Alert.alert('错误', '请输入用户名');
       return;
     }
-
     if (!password.trim()) {
       Alert.alert('错误', '请输入密码');
       return;
@@ -32,7 +32,6 @@ const LoginScreen: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await loginUser({ username, password });
-
       if (response.code === 200) {
         Alert.alert('成功', '登录成功！');
       } else {
@@ -46,13 +45,15 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>员工管理系统</Text>
-        <Text style={styles.subtitle}>请登录您的账户</Text>
+        <View style={styles.logoContainer}>
+          <View style={styles.logoCircle}>
+            <Text style={styles.logoText}>EMS</Text>
+          </View>
+          <Text style={styles.title}>员工管理系统</Text>
+          <Text style={styles.subtitle}>Enterprise Management System</Text>
+        </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>用户名</Text>
@@ -60,7 +61,8 @@ const LoginScreen: React.FC = () => {
             style={styles.input}
             value={username}
             onChangeText={setUsername}
-            placeholder="请输入用户名 (admin)"
+            placeholder="请输入用户名"
+            placeholderTextColor="#94A3B8"
             autoCapitalize="none"
             editable={!isLoading}
           />
@@ -73,6 +75,7 @@ const LoginScreen: React.FC = () => {
             value={password}
             onChangeText={setPassword}
             placeholder="请输入密码"
+            placeholderTextColor="#94A3B8"
             secureTextEntry
             editable={!isLoading}
           />
@@ -82,17 +85,16 @@ const LoginScreen: React.FC = () => {
           style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
           onPress={handleLogin}
           disabled={isLoading}
+          activeOpacity={0.8}
         >
           {isLoading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.loginButtonText}>登录</Text>
+            <Text style={styles.loginButtonText}>登 录</Text>
           )}
         </TouchableOpacity>
 
-        <Text style={styles.hint}>
-          提示：用户名输入 "admin"，密码任意
-        </Text>
+        <Text style={styles.hint}>默认账号: admin / admin123</Text>
       </View>
     </KeyboardAvoidingView>
   );
@@ -101,65 +103,88 @@ const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F8FAFC',
   },
   formContainer: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 32,
   },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 48,
+  },
+  logoCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 24,
+    backgroundColor: '#1E3A8A',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    ...shadows.lg,
+  },
+  logoText: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 8,
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 6,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 40,
+    fontSize: 13,
+    color: '#94A3B8',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
   inputContainer: {
     marginBottom: 20,
   },
   label: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '600',
-    color: '#333',
+    color: '#64748B',
     marginBottom: 8,
+    marginLeft: 2,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
+    borderColor: '#E2E8F0',
+    borderRadius: 12,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     fontSize: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
+    color: '#0F172A',
+    ...shadows.sm,
   },
   loginButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
+    backgroundColor: '#1E3A8A',
+    borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 12,
+    ...shadows.md,
   },
   loginButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#93C5FD',
   },
   loginButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
+    letterSpacing: 4,
   },
   hint: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 13,
+    color: '#94A3B8',
     textAlign: 'center',
-    marginTop: 20,
-    fontStyle: 'italic',
+    marginTop: 24,
   },
 });
 

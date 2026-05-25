@@ -25,6 +25,7 @@ async def get_employees(request: Request):
                 "department": emp.department,
                 "position": emp.position,
                 "employee_id": emp.employee_id,
+                "created_at": emp.created_at.isoformat() if emp.created_at else None,
             }
             for emp in employees
         ]

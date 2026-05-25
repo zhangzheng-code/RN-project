@@ -10,16 +10,21 @@ import {
 } from "react-native";
 import { AuthProvider, useAuth } from "./AuthContext";
 import LoginScreen from "./screens/LoginScreen";
-// 严格检查：确保没有带花括号 {}，且路径大小写完全一致！
 import EmployeeScreen from "./screens/EmployeeScreen";
 import CategoryScreen from "./screens/CategoryScreen";
 import DeviceScreen from "./screens/DeviceScreen";
 
+const TABS = [
+  { key: "employees", label: "员工" },
+  { key: "categories", label: "分类" },
+  { key: "devices", label: "设备" },
+] as const;
+
+type TabKey = (typeof TABS)[number]["key"];
+
 function MainApp() {
   const { user, isLoading, logout } = useAuth();
-  const [currentTab, setCurrentTab] = React.useState<
-    "employees" | "categories" | "devices"
-  >("employees");
+  const [currentTab, setCurrentTab] = React.useState<TabKey>("employees");
 
   if (isLoading) {
     return <View style={styles.container} />;
@@ -34,53 +39,24 @@ function MainApp() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.tabBar}>
           <View style={styles.tabContainer}>
-            <TouchableOpacity
-              style={[
-                styles.tab,
-                currentTab === "employees" && styles.activeTab,
-              ]}
-              onPress={() => setCurrentTab("employees")}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  currentTab === "employees" && styles.activeTabText,
-                ]}
-              >
-                员工管理
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.tab,
-                currentTab === "categories" && styles.activeTab,
-              ]}
-              onPress={() => setCurrentTab("categories")}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  currentTab === "categories" && styles.activeTabText,
-                ]}
-              >
-                分类管理
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tab, currentTab === "devices" && styles.activeTab]}
-              onPress={() => setCurrentTab("devices")}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  currentTab === "devices" && styles.activeTabText,
-                ]}
-              >
-                设备管理
-              </Text>
-            </TouchableOpacity>
+            {TABS.map((tab) => {
+              const isActive = currentTab === tab.key;
+              return (
+                <TouchableOpacity
+                  key={tab.key}
+                  style={[styles.tab, isActive && styles.activeTab]}
+                  onPress={() => setCurrentTab(tab.key)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.tabText, isActive && styles.activeTabText]}>
+                    {tab.label}
+                  </Text>
+                  {isActive && <View style={styles.tabIndicator} />}
+                </TouchableOpacity>
+              );
+            })}
           </View>
-          <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <TouchableOpacity style={styles.logoutButton} onPress={logout} activeOpacity={0.7}>
             <Text style={styles.logoutButtonText}>退出</Text>
           </TouchableOpacity>
         </View>
@@ -90,7 +66,7 @@ function MainApp() {
       {currentTab === "categories" && <CategoryScreen />}
       {currentTab === "devices" && <DeviceScreen />}
 
-      <StatusBar barStyle="light-content" backgroundColor="#007AFF" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
     </View>
   );
 }
@@ -106,49 +82,73 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#F8FAFC",
   },
   safeArea: {
-    backgroundColor: "#007AFF", // 将安全区域背景设为和导航栏一致的蓝色
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0, // 兼容 Android 状态栏高度
+    backgroundColor: "#FFFFFF",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#1E3A8A",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   tabBar: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+    paddingBottom: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F1F5F9",
   },
   tabContainer: {
     flexDirection: "row",
   },
   tab: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginRight: 8,
-    borderRadius: 6,
+    paddingVertical: 14,
+    marginRight: 4,
+    position: "relative",
   },
-  activeTab: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
+  activeTab: {},
   tabText: {
-    color: "rgba(255, 255, 255, 0.7)",
-    fontSize: 16,
-    fontWeight: "600",
+    color: "#94A3B8",
+    fontSize: 15,
+    fontWeight: "500",
   },
   activeTabText: {
-    color: "#fff",
+    color: "#1E3A8A",
+    fontWeight: "700",
+  },
+  tabIndicator: {
+    position: "absolute",
+    bottom: 0,
+    left: 16,
+    right: 16,
+    height: 3,
+    backgroundColor: "#1E3A8A",
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
   },
   logoutButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 4,
+    backgroundColor: "#FEF2F2",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#FECACA",
   },
   logoutButtonText: {
-    color: "#fff",
-    fontSize: 14,
+    color: "#DC2626",
+    fontSize: 13,
     fontWeight: "600",
   },
 });

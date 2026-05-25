@@ -1,0 +1,31 @@
+Creating multiprocessing context using 'spawn'
+[34mStarting a process: [1m[38;2;255;13;104mSanic-Server-0-0[0m
+[34mStarting a process: [1m[38;2;255;13;104mSanic-Reloader-0[0m
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+[34mProcess ack: [1m[38;2;255;13;104mSanic-Server-0-0 [34m[33644][0m
+<Server sockets=(<asyncio.TransportSocket fd=944, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [33644]
+BEGIN (implicit)
+SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s
+[generated in 0.00358s] ('admin',)
+[2026-05-25 09:01:24] POST /api/auth/login - 127.0.0.1 - STATUS 200 - 248ms
+
+Executing <Task pending name='Task-8' coro=<HttpProtocol.connection_task() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:161> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:301> took 0.235 seconds
+ROLLBACK

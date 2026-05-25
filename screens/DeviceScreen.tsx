@@ -9,10 +9,32 @@ import {
   Alert,
   Modal,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { Device, Category, Employee } from '../types';
 import { apiClient } from '../apiClient';
-import { colors, spacing, borderRadius, typography } from '../styles/designSystem';
+import { colors, spacing, borderRadius, shadows } from '../styles/designSystem';
+
+const statusConfig: Record<string, { bg: string; border: string; text: string; label: string }> = {
+  available: { bg: '#F0FDF4', border: '#BBF7D0', text: '#059669', label: 'Available' },
+  assigned: { bg: '#EFF6FF', border: '#BFDBFE', text: '#2563EB', label: 'Assigned' },
+  maintenance: { bg: '#FFFBEB', border: '#FDE68A', text: '#D97706', label: 'Maintenance' },
+  retired: { bg: '#FEF2F2', border: '#FECACA', text: '#DC2626', label: 'Retired' },
+};
+
+const getDeviceIcon = (name: string) => {
+  const lower = name.toLowerCase();
+  if (lower.includes('laptop') || lower.includes('电脑') || lower.includes('macbook')) return '💻';
+  if (lower.includes('phone') || lower.includes('手机') || lower.includes('iphone')) return '📱';
+  if (lower.includes('monitor') || lower.includes('显示器') || lower.includes('screen')) return '🖥️';
+  if (lower.includes('printer') || lower.includes('打印')) return '🖨️';
+  if (lower.includes('camera') || lower.includes('摄像')) return '📷';
+  if (lower.includes('headphone') || lower.includes('耳机')) return '🎧';
+  if (lower.includes('keyboard') || lower.includes('键盘')) return '⌨️';
+  if (lower.includes('mouse') || lower.includes('鼠标')) return '🖱️';
+  if (lower.includes('server') || lower.includes('服务器')) return '🗄️';
+  return '📦';
+};
 
 export default function DeviceScreen() {
   const [devices, setDevices] = useState<Device[]>([]);
@@ -42,11 +64,8 @@ export default function DeviceScreen() {
     try {
       setLoading(true);
       const response = await apiClient.getDevices();
-      if (response.code === 200) {
-        setDevices(response.data || []);
-      } else {
-        Alert.alert('Error', response.message || 'Failed to load devices');
-      }
+      if (response.code === 200) setDevices(response.data || []);
+      else Alert.alert('Error', response.message || 'Failed to load devices');
     } catch (error) {
       console.error('Failed to fetch devices:', error);
       Alert.alert('Error', 'Failed to load devices');
@@ -79,19 +98,12 @@ export default function DeviceScreen() {
         Alert.alert('Error', 'Device name is required');
         return;
       }
-
-      const deviceData = {
-        ...formData,
-        category_id: formData.category_id ,
-        assigned_to: formData.assigned_to ,
-      };
-
+      const deviceData = { ...formData, category_id: formData.category_id, assigned_to: formData.assigned_to };
       if (editingDevice) {
         await apiClient.updateDevice(editingDevice.id.toString(), deviceData);
       } else {
         await apiClient.createDevice(deviceData);
       }
-
       setModalVisible(false);
       resetForm();
       fetchDevices();
@@ -103,27 +115,23 @@ export default function DeviceScreen() {
   };
 
   const handleDelete = async (id: number) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this device?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await apiClient.deleteDevice(id.toString());
-              fetchDevices();
-              Alert.alert('Success', 'Device deleted successfully');
-            } catch (error) {
-              console.error('Failed to delete device:', error);
-              Alert.alert('Error', 'Failed to delete device');
-            }
-          },
+    Alert.alert('Confirm Delete', 'Are you sure you want to delete this device?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await apiClient.deleteDevice(id.toString());
+            fetchDevices();
+            Alert.alert('Success', 'Device deleted successfully');
+          } catch (error) {
+            console.error('Failed to delete device:', error);
+            Alert.alert('Error', 'Failed to delete device');
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleEdit = (device: Device) => {
@@ -142,89 +150,89 @@ export default function DeviceScreen() {
   };
 
   const resetForm = () => {
-    setFormData({
-      name: '',
-      model: '',
-      serial_number: '',
-      category_id: null,
-      assigned_to: null,
-      status: 'available',
-      purchase_date: '',
-      notes: '',
-    });
+    setFormData({ name: '', model: '', serial_number: '', category_id: null, assigned_to: null, status: 'available', purchase_date: '', notes: '' });
     setEditingDevice(null);
   };
 
   const getCategoryName = (categoryId: number | null) => {
     if (!categoryId) return 'No Category';
-    const category = categories.find(c => c.id === categoryId);
-    return category ? category.name : 'Unknown Category';
+    const c = categories.find((c) => c.id === categoryId);
+    return c ? c.name : 'Unknown';
   };
 
   const getEmployeeName = (employeeId: number | null) => {
     if (!employeeId) return 'Unassigned';
-    const employee = employees.find(e => e.id === employeeId);
-    return employee ? employee.name : 'Unknown Employee';
+    const e = employees.find((e) => e.id === employeeId);
+    return e ? e.name : 'Unknown';
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'available': return colors.success;
-      case 'assigned': return colors.info;
-      case 'maintenance': return colors.warning;
-      case 'retired': return colors.error;
-      default: return colors.textSecondary;
-    }
-  };
-
-  const renderDevice = ({ item }: { item: Device }) => (
-    <View style={styles.card}>
-      <View style={styles.cardHeader}>
-        <View style={styles.deviceInfo}>
-          <Text style={styles.deviceName}>{item.name}</Text>
-          <View style={styles.statusContainer}>
-            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
-              <Text style={styles.statusText}>{item.status.toUpperCase()}</Text>
-            </View>
+  const renderDevice = ({ item }: { item: Device }) => {
+    const sc = statusConfig[item.status] || statusConfig.available;
+    return (
+      <View style={styles.card}>
+        <View style={styles.cardTop}>
+          <View style={styles.iconBox}>
+            <Text style={styles.iconText}>{getDeviceIcon(item.name)}</Text>
+          </View>
+          <View style={styles.cardInfo}>
+            <Text style={styles.deviceName}>{item.name}</Text>
+            {item.model ? <Text style={styles.deviceModel}>{item.model}</Text> : null}
+          </View>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity style={styles.editBtn} onPress={() => handleEdit(item)}>
+              <Text style={styles.editBtnText}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item.id)}>
+              <Text style={styles.deleteBtnText}>Del</Text>
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.actionButtons}>
-          <TouchableOpacity
-            style={[styles.actionButton, styles.editButton]}
-            onPress={() => handleEdit(item)}
-          >
-            <Text style={styles.actionButtonText}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionButton, styles.deleteButton]}
-            onPress={() => handleDelete(item.id)}
-          >
-            <Text style={styles.actionButtonText}>Delete</Text>
-          </TouchableOpacity>
+
+        <View style={[styles.statusBadge, { backgroundColor: sc.bg, borderColor: sc.border }]}>
+          <Text style={[styles.statusText, { color: sc.text }]}>{sc.label}</Text>
+        </View>
+
+        <View style={styles.divider} />
+
+        <View style={styles.detailGrid}>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>SN</Text>
+            <Text style={styles.detailValue}>{item.serial_number || '—'}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Category</Text>
+            <Text style={styles.detailValue}>{getCategoryName(item.category_id)}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Assigned</Text>
+            <Text style={styles.detailValue}>{getEmployeeName(item.assigned_to)}</Text>
+          </View>
+          {item.purchase_date ? (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Date</Text>
+              <Text style={styles.detailValue}>{item.purchase_date}</Text>
+            </View>
+          ) : null}
+          {item.notes ? (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Notes</Text>
+              <Text style={styles.detailValue} numberOfLines={2}>{item.notes}</Text>
+            </View>
+          ) : null}
         </View>
       </View>
-
-      {item.model && <Text style={styles.deviceDetail}>Model: {item.model}</Text>}
-      {item.serial_number && <Text style={styles.deviceDetail}>Serial: {item.serial_number}</Text>}
-      <Text style={styles.deviceDetail}>Category: {getCategoryName(item.category_id)}</Text>
-      <Text style={styles.deviceDetail}>Assigned to: {getEmployeeName(item.assigned_to)}</Text>
-      {item.purchase_date && <Text style={styles.deviceDetail}>Purchase Date: {item.purchase_date}</Text>}
-      {item.notes && <Text style={styles.deviceDetail}>Notes: {item.notes}</Text>}
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Devices</Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => {
-            resetForm();
-            setModalVisible(true);
-          }}
-        >
-          <Text style={styles.addButtonText}>Add Device</Text>
+        <View>
+          <Text style={styles.title}>Devices</Text>
+          <Text style={styles.subtitle}>{devices.length} assets</Text>
+        </View>
+        <TouchableOpacity style={styles.addButton} onPress={() => { resetForm(); setModalVisible(true); }}>
+          <Text style={styles.addButtonText}>+ Add</Text>
         </TouchableOpacity>
       </View>
 
@@ -235,119 +243,73 @@ export default function DeviceScreen() {
         refreshing={loading}
         onRefresh={fetchDevices}
         contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
       />
 
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <ScrollView>
-              <Text style={styles.modalTitle}>
-                {editingDevice ? 'Edit Device' : 'Add Device'}
-              </Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.modalTitle}>{editingDevice ? 'Edit Device' : 'Add Device'}</Text>
 
-              <TextInput
-                style={styles.input}
-                placeholder="Device Name *"
-                value={formData.name}
-                onChangeText={(text) => setFormData({ ...formData, name: text })}
-              />
+              <Text style={styles.inputLabel}>Device Name *</Text>
+              <TextInput style={styles.input} placeholder="e.g. MacBook Pro 16" value={formData.name} onChangeText={(t) => setFormData({ ...formData, name: t })} />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Model"
-                value={formData.model}
-                onChangeText={(text) => setFormData({ ...formData, model: text })}
-              />
+              <Text style={styles.inputLabel}>Model</Text>
+              <TextInput style={styles.input} placeholder="Optional" value={formData.model} onChangeText={(t) => setFormData({ ...formData, model: t })} />
 
-              <TextInput
-                style={styles.input}
-                placeholder="Serial Number"
-                value={formData.serial_number}
-                onChangeText={(text) => setFormData({ ...formData, serial_number: text })}
-              />
+              <Text style={styles.inputLabel}>Serial Number</Text>
+              <TextInput style={styles.input} placeholder="Optional" value={formData.serial_number} onChangeText={(t) => setFormData({ ...formData, serial_number: t })} />
 
-              <View style={styles.pickerContainer}>
-                <Text style={styles.pickerLabel}>Category</Text>
-                <TouchableOpacity
-                  style={styles.picker}
-                  onPress={() => {
-                    // Simple category selection - in a real app, you'd use a proper dropdown
-                    const nextIndex = categories.findIndex(c => c.id === formData.category_id) + 1;
-                    const newCategoryId = nextIndex < categories.length ? categories[nextIndex].id : null;
-                    setFormData({ ...formData, category_id: newCategoryId });
-                  }}
-                >
-                  <Text style={styles.pickerText}>
-                    {formData.category_id ? getCategoryName(formData.category_id) : 'Select Category'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={styles.inputLabel}>Category</Text>
+              <TouchableOpacity
+                style={styles.pickerBtn}
+                onPress={() => {
+                  const idx = categories.findIndex((c) => c.id === formData.category_id) + 1;
+                  setFormData({ ...formData, category_id: idx < categories.length ? categories[idx].id : null });
+                }}
+              >
+                <Text style={styles.pickerText}>{formData.category_id ? getCategoryName(formData.category_id) : 'Select Category'}</Text>
+                <Text style={styles.pickerArrow}>▼</Text>
+              </TouchableOpacity>
 
-              <View style={styles.pickerContainer}>
-                <Text style={styles.pickerLabel}>Assign to Employee</Text>
-                <TouchableOpacity
-                  style={styles.picker}
-                  onPress={() => {
-                    // Simple employee selection - in a real app, you'd use a proper dropdown
-                    const nextIndex = employees.findIndex(e => e.id === formData.assigned_to) + 1;
-                    const newEmployeeId = nextIndex < employees.length ? employees[nextIndex].id : null;
-                    setFormData({ ...formData, assigned_to: newEmployeeId });
-                  }}
-                >
-                  <Text style={styles.pickerText}>
-                    {formData.assigned_to ? getEmployeeName(formData.assigned_to) : 'Unassigned'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={styles.inputLabel}>Assign to Employee</Text>
+              <TouchableOpacity
+                style={styles.pickerBtn}
+                onPress={() => {
+                  const idx = employees.findIndex((e) => e.id === formData.assigned_to) + 1;
+                  setFormData({ ...formData, assigned_to: idx < employees.length ? employees[idx].id : null });
+                }}
+              >
+                <Text style={styles.pickerText}>{formData.assigned_to ? getEmployeeName(formData.assigned_to) : 'Unassigned'}</Text>
+                <Text style={styles.pickerArrow}>▼</Text>
+              </TouchableOpacity>
 
-              <View style={styles.pickerContainer}>
-                <Text style={styles.pickerLabel}>Status</Text>
-                <TouchableOpacity
-                  style={styles.picker}
-                  onPress={() => {
-                    const statuses = ['available', 'assigned', 'maintenance', 'retired'];
-                    const currentIndex = statuses.indexOf(formData.status);
-                    const nextIndex = (currentIndex + 1) % statuses.length;
-                    setFormData({ ...formData, status: statuses[nextIndex] as any });
-                  }}
-                >
-                  <Text style={styles.pickerText}>
-                    {formData.status.charAt(0).toUpperCase() + formData.status.slice(1)}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={styles.inputLabel}>Status</Text>
+              <TouchableOpacity
+                style={styles.pickerBtn}
+                onPress={() => {
+                  const statuses = ['available', 'assigned', 'maintenance', 'retired'] as const;
+                  const idx = statuses.indexOf(formData.status);
+                  setFormData({ ...formData, status: statuses[(idx + 1) % statuses.length] });
+                }}
+              >
+                <Text style={styles.pickerText}>{formData.status.charAt(0).toUpperCase() + formData.status.slice(1)}</Text>
+                <Text style={styles.pickerArrow}>▼</Text>
+              </TouchableOpacity>
 
-              <TextInput
-                style={styles.input}
-                placeholder="Purchase Date (YYYY-MM-DD)"
-                value={formData.purchase_date}
-                onChangeText={(text) => setFormData({ ...formData, purchase_date: text })}
-              />
+              <Text style={styles.inputLabel}>Purchase Date</Text>
+              <TextInput style={styles.input} placeholder="YYYY-MM-DD" value={formData.purchase_date} onChangeText={(t) => setFormData({ ...formData, purchase_date: t })} />
 
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                placeholder="Notes"
-                value={formData.notes}
-                onChangeText={(text) => setFormData({ ...formData, notes: text })}
-                multiline
-                numberOfLines={3}
-              />
+              <Text style={styles.inputLabel}>Notes</Text>
+              <TextInput style={[styles.input, styles.textArea]} placeholder="Optional notes" value={formData.notes} onChangeText={(t) => setFormData({ ...formData, notes: t })} multiline numberOfLines={3} />
 
               <View style={styles.modalActions}>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => {
-                    setModalVisible(false);
-                    resetForm();
-                  }}
-                >
-                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                <TouchableOpacity style={[styles.modalBtn, styles.cancelBtn]} onPress={() => { setModalVisible(false); resetForm(); }}>
+                  <Text style={styles.cancelBtnText}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.saveButton]}
-                  onPress={handleSave}
-                >
-                  <Text style={styles.saveButtonText}>Save</Text>
+                <TouchableOpacity style={[styles.modalBtn, styles.saveBtn]} onPress={handleSave}>
+                  <Text style={styles.saveBtnText}>Save</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -359,183 +321,55 @@ export default function DeviceScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: spacing.md,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 20, paddingTop: 20, paddingBottom: 16, backgroundColor: '#FFFFFF',
+    ...shadows.sm,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  addButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.md,
-  },
-  addButtonText: {
-    color: colors.surface,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  listContainer: {
-    padding: spacing.md,
-  },
+  title: { fontSize: 28, fontWeight: '700', color: '#0F172A' },
+  subtitle: { fontSize: 14, color: '#64748B', marginTop: 2 },
+  addButton: { backgroundColor: '#1E3A8A', paddingHorizontal: 20, paddingVertical: 12, borderRadius: 12, ...shadows.md },
+  addButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
+  listContainer: { padding: 16, paddingBottom: 32 },
   card: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, marginBottom: 12,
+    ...Platform.select({
+      ios: { shadowColor: '#1E3A8A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12 },
+      android: { elevation: 4 },
+    }),
   },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: spacing.sm,
-  },
-  deviceInfo: {
-    flex: 1,
-    marginRight: spacing.md,
-  },
-  deviceName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    marginBottom: spacing.xs,
-  },
-  statusContainer: {
-    flexDirection: 'row',
-  },
-  statusBadge: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.sm,
-  },
-  statusText: {
-    color: colors.surface,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  actionButton: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.sm,
-    minWidth: 60,
-    alignItems: 'center',
-  },
-  editButton: {
-    backgroundColor: colors.warning,
-  },
-  deleteButton: {
-    backgroundColor: colors.error,
-  },
-  actionButtonText: {
-    color: colors.surface,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  deviceDetail: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    marginBottom: spacing.xs,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.lg,
-    padding: spacing.lg,
-    width: '90%',
-    maxHeight: '80%',
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: colors.textPrimary,
-    marginBottom: spacing.lg,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    fontSize: 16,
-    marginBottom: spacing.md,
-    backgroundColor: colors.surface,
-  },
-  textArea: {
-    height: 80,
-    textAlignVertical: 'top',
-  },
-  pickerContainer: {
-    marginBottom: spacing.md,
-  },
-  pickerLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: colors.textPrimary,
-    marginBottom: spacing.xs,
-  },
-  picker: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: borderRadius.md,
-    backgroundColor: colors.surface,
-  },
-  pickerText: {
-    fontSize: 16,
-    color: colors.textPrimary,
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: spacing.lg,
-    gap: spacing.md,
-  },
-  modalButton: {
-    flex: 1,
-    paddingVertical: spacing.md,
-    borderRadius: borderRadius.md,
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: colors.textSecondary,
-  },
-  saveButton: {
-    backgroundColor: colors.primary,
-  },
-  cancelButtonText: {
-    color: colors.surface,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  saveButtonText: {
-    color: colors.surface,
-    fontSize: 16,
-    fontWeight: '500',
-  },
+  cardTop: { flexDirection: 'row', alignItems: 'center' },
+  iconBox: { width: 48, height: 48, borderRadius: 14, backgroundColor: '#EFF6FF', alignItems: 'center', justifyContent: 'center', marginRight: 12 },
+  iconText: { fontSize: 22 },
+  cardInfo: { flex: 1 },
+  deviceName: { fontSize: 17, fontWeight: '700', color: '#0F172A' },
+  deviceModel: { fontSize: 13, color: '#64748B', marginTop: 2 },
+  actionButtons: { flexDirection: 'row', gap: 8 },
+  editBtn: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8, backgroundColor: '#EFF6FF', borderWidth: 1, borderColor: '#BFDBFE' },
+  editBtnText: { color: '#1E3A8A', fontSize: 13, fontWeight: '600' },
+  deleteBtn: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8, backgroundColor: '#FEF2F2', borderWidth: 1, borderColor: '#FECACA' },
+  deleteBtnText: { color: '#DC2626', fontSize: 13, fontWeight: '600' },
+  statusBadge: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, borderWidth: 1, marginTop: 12 },
+  statusText: { fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
+  divider: { height: 1, backgroundColor: '#F1F5F9', marginVertical: 12 },
+  detailGrid: { gap: 6 },
+  detailRow: { flexDirection: 'row', alignItems: 'center' },
+  detailLabel: { fontSize: 12, fontWeight: '600', color: '#94A3B8', width: 72, textTransform: 'uppercase', letterSpacing: 0.5 },
+  detailValue: { fontSize: 14, color: '#64748B', flex: 1 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(15,23,42,0.6)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 20, width: '92%', maxHeight: '85%', ...shadows.lg },
+  modalTitle: { fontSize: 24, fontWeight: '700', color: '#0F172A', marginBottom: 20, textAlign: 'center' },
+  inputLabel: { fontSize: 13, fontWeight: '600', color: '#64748B', marginBottom: 6, marginLeft: 2 },
+  input: { borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, fontSize: 16, marginBottom: 16, backgroundColor: '#F8FAFC', color: '#0F172A' },
+  textArea: { height: 80, textAlignVertical: 'top' },
+  pickerBtn: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8, paddingHorizontal: 16, paddingVertical: 14, marginBottom: 16, backgroundColor: '#F8FAFC' },
+  pickerText: { fontSize: 16, color: '#0F172A' },
+  pickerArrow: { fontSize: 12, color: '#94A3B8' },
+  modalActions: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, gap: 12 },
+  modalBtn: { flex: 1, paddingVertical: 16, borderRadius: 8, alignItems: 'center' },
+  cancelBtn: { backgroundColor: '#F1F5F9', borderWidth: 1, borderColor: '#E2E8F0' },
+  saveBtn: { backgroundColor: '#1E3A8A', ...shadows.md },
+  cancelBtnText: { color: '#64748B', fontSize: 16, fontWeight: '600' },
+  saveBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
 });

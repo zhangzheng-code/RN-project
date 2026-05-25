@@ -27,7 +27,8 @@ async def get_categories(request: Request):
                 "id": cat.id,
                 "name": cat.name,
                 "description": cat.description,
-                "device_count": count_map.get(cat.id, 0)
+                "device_count": count_map.get(cat.id, 0),
+                "created_at": cat.created_at.isoformat() if cat.created_at else None,
             }
             for cat in categories
         ]
@@ -130,7 +131,8 @@ async def update_category(request: Request, category_id: int):
 @authorized()
 async def get_devices(request: Request):
     """Get all devices, optionally filtered by category"""
-    category_id = request.args.get('category_id', type=int)
+    category_id_str = request.args.get('category_id')
+    category_id = int(category_id_str) if category_id_str else None
 
     async for session in get_db():
         query = select(Device)
@@ -151,6 +153,7 @@ async def get_devices(request: Request):
                 "status": dev.status,
                 "purchase_date": dev.purchase_date,
                 "notes": dev.notes,
+                "created_at": dev.created_at.isoformat() if dev.created_at else None,
             }
             for dev in devices
         ]
