@@ -29,3 +29,832 @@ WHERE users.username = %s
 
 Executing <Task pending name='Task-8' coro=<HttpProtocol.connection_task() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:161> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:301> took 0.235 seconds
 ROLLBACK
+BEGIN (implicit)
+SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s
+[cached since 11.41s ago] ('admin',)
+[2026-05-25 09:01:36] POST /api/auth/login - 127.0.0.1 - STATUS 200 - 259ms
+
+Executing <Task pending name='Task-12' coro=<HttpProtocol.connection_task() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:161> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:301> took 0.266 seconds
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[generated in 0.00034s] ()
+[2026-05-25 09:01:36] GET /api/employees - 127.0.0.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s
+[cached since 39.85s ago] ('admin',)
+[2026-05-25 09:02:04] POST /api/auth/login - 172.20.10.1 - STATUS 200 - 239ms
+
+Executing <Task pending name='Task-20' coro=<HttpProtocol.connection_task() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:161> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:301> took 0.235 seconds
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[generated in 0.00060s] ()
+[2026-05-25 09:02:04] GET /api/devices - 172.20.10.1 - STATUS 200 - 16ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[generated in 0.00029s] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[generated in 0.00072s] ()
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 28.2s ago] ()
+[2026-05-25 09:02:04] GET /api/employees - 172.20.10.1 - STATUS 200 - 22ms
+
+[2026-05-25 09:02:04] GET /api/categories - 172.20.10.1 - STATUS 200 - 26ms
+
+ROLLBACK
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 6.172s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 6.17s ago] ()
+[2026-05-25 09:02:10] GET /api/categories - 172.20.10.1 - STATUS 200 - 5ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 34.92s ago] ()
+[2026-05-25 09:02:11] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 440.4s ago] ()
+[2026-05-25 09:08:57] GET /api/employees - 172.20.10.1 - STATUS 200 - 8ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 416.6s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 416.6s ago] ()
+[2026-05-25 09:09:01] GET /api/categories - 172.20.10.1 - STATUS 200 - 10ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 446.3s ago] ()
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 418.1s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 418.1s ago] ()
+[2026-05-25 09:09:02] GET /api/employees - 172.20.10.1 - STATUS 200 - 6ms
+
+ROLLBACK
+[2026-05-25 09:09:02] GET /api/categories - 172.20.10.1 - STATUS 200 - 7ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 418.1s ago] ()
+[2026-05-25 09:09:02] GET /api/devices - 172.20.10.1 - STATUS 200 - 27ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 420.7s ago] ()
+[2026-05-25 09:09:05] GET /api/devices - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 482.6s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 482.6s ago] ()
+[2026-05-25 09:10:07] GET /api/categories - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 511.3s ago] ()
+[2026-05-25 09:10:07] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 512.2s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 512.2s ago] ()
+[2026-05-25 09:10:37] GET /api/categories - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 519.7s ago] ()
+[2026-05-25 09:10:44] GET /api/devices - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 519.6s ago] ()
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 547.8s ago] ()
+[2026-05-25 09:10:44] GET /api/employees - 172.20.10.1 - STATUS 200 - 1ms
+
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 519.6s ago] ()
+ROLLBACK
+[2026-05-25 09:10:44] GET /api/categories - 172.20.10.1 - STATUS 200 - 6ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 716.2s ago] ()
+Unexpected error: (pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')
+[SQL: SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+[2026-05-25 09:14:00] GET /api/categories - 172.20.10.1 - STATUS 500 - 3ms
+
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 745.9s ago] ()
+[2026-05-25 09:14:02] GET /api/employees - 172.20.10.1 - STATUS 200 - 11ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 719.5s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 719.5s ago] ()
+[2026-05-25 09:14:04] GET /api/categories - 172.20.10.1 - STATUS 200 - 13ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 748.4s ago] ()
+[2026-05-25 09:14:04] GET /api/employees - 172.20.10.1 - STATUS 200 - 11ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 757.3s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 757.3s ago] ()
+[2026-05-25 09:14:42] GET /api/categories - 172.20.10.1 - STATUS 200 - 6ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 758.1s ago] ()
+[2026-05-25 09:14:42] GET /api/devices - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 758.1s ago] ()
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 786.3s ago] ()
+[2026-05-25 09:14:42] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 758.1s ago] ()
+ROLLBACK
+[2026-05-25 09:14:42] GET /api/categories - 172.20.10.1 - STATUS 200 - 9ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 788.6s ago] ()
+[2026-05-25 09:14:45] GET /api/employees - 172.20.10.1 - STATUS 200 - 2ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 817.2s ago] ()
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 817.3s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 817.2s ago] ()
+[2026-05-25 09:15:42] GET /api/devices - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+[2026-05-25 09:15:42] GET /api/categories - 172.20.10.1 - STATUS 200 - 8ms
+
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 845.4s ago] ()
+ROLLBACK
+[2026-05-25 09:15:42] GET /api/employees - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 1328s ago] ()
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 1328s ago] ()
+[2026-05-25 09:24:12] GET /api/devices - 172.20.10.1 - STATUS 200 - 17ms
+
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 1356s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 1328s ago] ()
+ROLLBACK
+[2026-05-25 09:24:12] GET /api/employees - 172.20.10.1 - STATUS 200 - 19ms
+
+[2026-05-25 09:24:12] GET /api/categories - 172.20.10.1 - STATUS 200 - 22ms
+
+ROLLBACK
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 1336s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 1336s ago] ()
+[2026-05-25 09:24:20] GET /api/categories - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 1366s ago] ()
+[2026-05-25 09:24:22] GET /api/employees - 172.20.10.1 - STATUS 200 - 1ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 1369s ago] ()
+[2026-05-25 09:24:25] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 1344s ago] ()
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 1344s ago] ()
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 1372s ago] ()
+[2026-05-25 09:24:28] GET /api/devices - 172.20.10.1 - STATUS 200 - 5ms
+
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 1344s ago] ()
+[2026-05-25 09:24:28] GET /api/employees - 172.20.10.1 - STATUS 200 - 5ms
+
+ROLLBACK
+ROLLBACK
+[2026-05-25 09:24:28] GET /api/categories - 172.20.10.1 - STATUS 200 - 7ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 1367s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 1367s ago] ()
+[2026-05-25 09:24:51] GET /api/categories - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 1395s ago] ()
+[2026-05-25 09:24:52] GET /api/employees - 172.20.10.1 - STATUS 200 - 2ms
+
+ROLLBACK
+Executing <TimerHandle when=436410.55299999996 _set_result_unless_cancelled(<Future finis...events.py:449>, None) at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\futures.py:315 created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py:661> took 0.438 seconds
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 3441s ago] ()
+[2026-05-25 09:58:57] GET /api/employees - 172.20.10.1 - STATUS 200 - 25ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees 
+WHERE employees.id = %s
+[generated in 0.00142s] (5,)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees 
+WHERE employees.email = %s AND employees.id != %s
+[generated in 0.00072s] ('2517520280@qq.com', 5)
+UPDATE employees SET employee_id=%s WHERE employees.id = %s
+[generated in 0.02523s] ('003', 5)
+COMMIT
+[2026-05-25 09:59:26] PUT /api/employees/5 - 172.20.10.1 - STATUS 200 - 72ms
+
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 3470s ago] ()
+[2026-05-25 09:59:26] GET /api/employees - 172.20.10.1 - STATUS 200 - 14ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 3515s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 3515s ago] ()
+[2026-05-25 10:00:40] GET /api/categories - 172.20.10.1 - STATUS 200 - 20ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 3516s ago] ()
+[2026-05-25 10:00:40] GET /api/devices - 172.20.10.1 - STATUS 200 - 6ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 3516s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 3516s ago] ()
+[2026-05-25 10:00:40] GET /api/categories - 172.20.10.1 - STATUS 200 - 21ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 3544s ago] ()
+[2026-05-25 10:00:40] GET /api/employees - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 3519s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 3519s ago] ()
+[2026-05-25 10:00:43] GET /api/categories - 172.20.10.1 - STATUS 200 - 6ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 3553s ago] ()
+[2026-05-25 10:00:49] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s
+[cached since 5472s ago] ('admin',)
+[2026-05-25 10:32:37] POST /api/auth/login - 172.20.10.1 - STATUS 200 - 302ms
+
+Executing <Task pending name='Task-167' coro=<HttpProtocol.connection_task() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:161> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:301> took 0.297 seconds
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5461s ago] ()
+[2026-05-25 10:32:37] GET /api/employees - 172.20.10.1 - STATUS 200 - 20ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees 
+WHERE employees.id = %s
+[cached since 2062s ago] (2,)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees 
+WHERE employees.email = %s AND employees.id != %s
+[cached since 2062s ago] ('zhangzihan@company.com', 2)
+UPDATE employees SET name=%s, age=%s, email=%s, phone=%s, department=%s, position=%s, employee_id=%s WHERE employees.id = %s
+[generated in 0.00057s] ('张子涵', 22, 'zhangzihan@company.com', '188146018490', '决策层', '霸道总裁', '00001', 2)
+COMMIT
+[2026-05-25 10:33:48] PUT /api/employees/2 - 172.20.10.1 - STATUS 200 - 27ms
+
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5532s ago] ()
+[2026-05-25 10:33:48] GET /api/employees - 172.20.10.1 - STATUS 200 - 2ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5516s ago] ()
+[2026-05-25 10:34:00] GET /api/devices - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5544s ago] ()
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5516s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5516s ago] ()
+[2026-05-25 10:34:00] GET /api/employees - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+[2026-05-25 10:34:00] GET /api/categories - 172.20.10.1 - STATUS 200 - 6ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices 
+WHERE devices.id = %s
+[generated in 0.00050s] (1,)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories 
+WHERE categories.id = %s
+[generated in 0.00049s] (1,)
+UPDATE devices SET assigned_to=%s WHERE devices.id = %s
+[generated in 0.00076s] (2, 1)
+COMMIT
+[2026-05-25 10:35:55] PUT /api/devices/1 - 172.20.10.1 - STATUS 200 - 20ms
+
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5631s ago] ()
+[2026-05-25 10:35:55] GET /api/devices - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices 
+WHERE devices.id = %s
+[cached since 13.39s ago] (2,)
+Unexpected error: (pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')
+[SQL: SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices 
+WHERE devices.id = %s]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+[2026-05-25 10:36:08] PUT /api/devices/2 - 172.20.10.1 - STATUS 500 - 4ms
+
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5644s ago] ()
+[2026-05-25 10:36:08] GET /api/devices - 172.20.10.1 - STATUS 200 - 8ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices 
+WHERE devices.id = %s
+[cached since 22.77s ago] (2,)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories 
+WHERE categories.id = %s
+[cached since 22.77s ago] (2,)
+UPDATE devices SET category_id=%s WHERE devices.id = %s
+[generated in 0.00071s] (2, 2)
+COMMIT
+[2026-05-25 10:36:18] PUT /api/devices/2 - 172.20.10.1 - STATUS 200 - 28ms
+
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5653s ago] ()
+[2026-05-25 10:36:18] GET /api/devices - 172.20.10.1 - STATUS 200 - 7ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5731s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5731s ago] ()
+[2026-05-25 10:37:35] GET /api/categories - 172.20.10.1 - STATUS 200 - 5ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5760s ago] ()
+[2026-05-25 10:37:36] GET /api/employees - 172.20.10.1 - STATUS 200 - 2ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5841s ago] ()
+Unexpected error: (pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')
+[SQL: SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+[2026-05-25 10:38:57] GET /api/employees - 172.20.10.1 - STATUS 500 - 3ms
+
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5815s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5815s ago] ()
+[2026-05-25 10:38:59] GET /api/categories - 172.20.10.1 - STATUS 200 - 19ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5815s ago] ()
+[2026-05-25 10:39:00] GET /api/devices - 172.20.10.1 - STATUS 200 - 11ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5843s ago] ()
+[2026-05-25 10:39:00] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5815s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5815s ago] ()
+[2026-05-25 10:39:00] GET /api/categories - 172.20.10.1 - STATUS 200 - 15ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5844s ago] ()
+[2026-05-25 10:39:00] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5845s ago] ()
+[2026-05-25 10:39:01] GET /api/employees - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5837s ago] ()
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5837s ago] ()
+[2026-05-25 10:39:21] GET /api/devices - 172.20.10.1 - STATUS 200 - 8ms
+
+ROLLBACK
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5837s ago] ()
+[2026-05-25 10:39:21] GET /api/categories - 172.20.10.1 - STATUS 200 - 11ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5865s ago] ()
+[2026-05-25 10:39:21] GET /api/employees - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5854s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5854s ago] ()
+[2026-05-25 10:39:38] GET /api/categories - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5872s ago] ()
+[2026-05-25 10:39:57] GET /api/devices - 172.20.10.1 - STATUS 200 - 2ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5872s ago] ()
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5900s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5872s ago] ()
+[2026-05-25 10:39:57] GET /api/employees - 172.20.10.1 - STATUS 200 - 5ms
+
+ROLLBACK
+[2026-05-25 10:39:57] GET /api/categories - 172.20.10.1 - STATUS 200 - 12ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5904s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5904s ago] ()
+[2026-05-25 10:40:28] GET /api/categories - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5933s ago] ()
+[2026-05-25 10:40:29] GET /api/employees - 172.20.10.1 - STATUS 200 - 2ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5905s ago] ()
+[2026-05-25 10:40:29] GET /api/devices - 172.20.10.1 - STATUS 200 - 5ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5905s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5905s ago] ()
+[2026-05-25 10:40:29] GET /api/categories - 172.20.10.1 - STATUS 200 - 9ms
+
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5933s ago] ()
+ROLLBACK
+[2026-05-25 10:40:29] GET /api/employees - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT users.id, users.username, users.password, users.`role`, users.created_at 
+FROM users 
+WHERE users.username = %s
+[cached since 5965s ago] ('admin',)
+[2026-05-25 10:40:50] POST /api/auth/login - 172.20.10.1 - STATUS 200 - 300ms
+
+Executing <Task pending name='Task-249' coro=<HttpProtocol.connection_task() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:161> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\server\protocols\http_protocol.py:301> took 0.296 seconds
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5925s ago] ()
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5954s ago] ()
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5925s ago] ()
+[2026-05-25 10:40:50] GET /api/devices - 172.20.10.1 - STATUS 200 - 10ms
+
+[2026-05-25 10:40:50] GET /api/employees - 172.20.10.1 - STATUS 200 - 10ms
+
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5925s ago] ()
+ROLLBACK
+ROLLBACK
+[2026-05-25 10:40:50] GET /api/categories - 172.20.10.1 - STATUS 200 - 14ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5938s ago] ()
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5938s ago] ()
+[2026-05-25 10:41:03] GET /api/categories - 172.20.10.1 - STATUS 200 - 5ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5969s ago] ()
+[2026-05-25 10:41:05] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees 
+WHERE employees.id = %s
+[cached since 2512s ago] (1,)
+DELETE FROM employees WHERE employees.id = %s
+[generated in 0.00102s] (1,)
+COMMIT
+[2026-05-25 10:41:18] DELETE /api/employees/1 - 172.20.10.1 - STATUS 200 - 16ms
+
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5982s ago] ()
+[2026-05-25 10:41:18] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5984s ago] ()
+[2026-05-25 10:41:20] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT devices.id, devices.name, devices.model, devices.serial_number, devices.assigned_to, devices.status, devices.purchase_date, devices.notes, devices.category_id, devices.created_at 
+FROM devices
+[cached since 5958s ago] ()
+[2026-05-25 10:41:22] GET /api/devices - 172.20.10.1 - STATUS 200 - 4ms
+
+ROLLBACK
+BEGIN (implicit)
+SELECT employees.id, employees.name, employees.age, employees.email, employees.phone, employees.department, employees.position, employees.employee_id, employees.created_at 
+FROM employees
+[cached since 5986s ago] ()
+BEGIN (implicit)
+SELECT categories.id, categories.name, categories.description, categories.created_at 
+FROM categories
+[cached since 5958s ago] ()
+[2026-05-25 10:41:23] GET /api/employees - 172.20.10.1 - STATUS 200 - 3ms
+
+SELECT categories.id, count(devices.id) AS device_count 
+FROM categories LEFT OUTER JOIN devices ON categories.id = devices.category_id GROUP BY categories.id
+[cached since 5958s ago] ()
+ROLLBACK
+[2026-05-25 10:41:23] GET /api/categories - 172.20.10.1 - STATUS 200 - 8ms
+
+ROLLBACK
+Executing <TimerHandle when=442195.52099999995 _set_result_unless_cancelled(<Future finis...events.py:449>, None) at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\futures.py:315 created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py:661> took 0.110 seconds

@@ -796,3 +796,32 @@ COMMIT
 Process ack: Sanic-Server-0-0 [44340]
 <Server sockets=(<asyncio.TransportSocket fd=452, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
 Starting worker [44340]
+Creating multiprocessing context using 'spawn'
+[34mStarting a process: [1m[38;2;255;13;104mSanic-Server-0-0[0m
+[34mStarting a process: [1m[38;2;255;13;104mSanic-Reloader-0[0m
+Executing <Task pending name='Task-2' coro=<Sanic._server_event() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:2452> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\futures.py:391, Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> cb=[_run_until_complete_cb() at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:182] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py:695> took 0.329 seconds
+Executing <Task pending name='Task-2' coro=<Sanic._server_event() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:2452> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> cb=[_run_until_complete_cb() at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:182] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py:695> took 0.188 seconds
+Executing <Task pending name='Task-2' coro=<Sanic._server_event() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:2452> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> cb=[_run_until_complete_cb() at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:182] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py:695> took 0.359 seconds
+SELECT DATABASE()
+[raw sql] ()
+SELECT @@sql_mode
+[raw sql] ()
+SELECT @@lower_case_table_names
+[raw sql] ()
+BEGIN (implicit)
+DESCRIBE `contest_db`.`users`
+[raw sql] ()
+Executing <Task pending name='Task-2' coro=<Sanic._server_event() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:2452> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> cb=[_run_until_complete_cb() at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:182] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py:695> took 0.140 seconds
+DESCRIBE `contest_db`.`employees`
+[raw sql] ()
+DESCRIBE `contest_db`.`categories`
+[raw sql] ()
+DESCRIBE `contest_db`.`devices`
+[raw sql] ()
+COMMIT
+[34mProcess ack: [1m[38;2;255;13;104mSanic-Server-0-0 [34m[36452][0m
+<Server sockets=(<asyncio.TransportSocket fd=820, family=2, type=1, proto=6, laddr=('0.0.0.0', 8000)>,)> is serving
+Starting worker [36452]
+Executing <Task pending name='Task-5' coro=<Sanic._prep_task.<locals>.do() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:1650> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:1677> took 0.110 seconds
+Executing <TimerHandle when=442195.52099999995 _set_result_unless_cancelled(<Future finis...events.py:449>, None) at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\futures.py:315 created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\tasks.py:661> took 0.110 seconds
+Executing <Task pending name='Task-5' coro=<Sanic._prep_task.<locals>.do() running at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:1650> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py:449> created at C:\Users\zhangzheng\AppData\Local\Programs\Python\Python312\Lib\site-packages\sanic\app.py:1677> took 0.125 seconds
